@@ -29,6 +29,8 @@ void LastCloseUpForm::init(){
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint);
     ui->lcdNumber->installEventFilter(this);
+    this->setStyleSheet("background-color:rgba(0,0,0,0)");
+    this->ui->lcdNumber->setStyleSheet("background-color:rgba(0,0,0,0)");
 }
 
 void LastCloseUpForm::setTop(){

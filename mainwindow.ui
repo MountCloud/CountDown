@@ -712,7 +712,7 @@
       <item>
        <widget class="QLineEdit" name="lineEditCountDownContent">
         <property name="text">
-         <string>倒计时：$year年$month月$day天$hour时$minute分$second秒</string>
+         <string>倒计时：$day天$hour时$minute分$second秒</string>
         </property>
        </widget>
       </item>

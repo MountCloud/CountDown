@@ -54,7 +54,7 @@ private:
 
 private:
     void init();
-    void setCountDown(QString str,QString year,QString month,QString day,QString hour,QString minute,QString second);
+    void setCountDown(QString str,QString day,QString hour,QString minute,QString second);
 
 private slots:
     void slots_menuHomePage();

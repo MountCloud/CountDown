@@ -40,13 +40,20 @@ void MainWindow::init(){
     scatterFlowers = new ScatterFlowers();
 
     countDownShowForm->show();
+    countDownShowForm->setTop();
     countDownShowForm->hide();
 
     lastCloseUpForm->show();
+    lastCloseUpForm->setTop();
     lastCloseUpForm->hide();
 
     lasetTextShowForm->show();
+    lasetTextShowForm->setTop();
     lasetTextShowForm->hide();
+
+    scatterFlowers->show();
+    scatterFlowers->setTop();
+    scatterFlowers->hide();
 
     statusLable = new QLabel();
     statusLable->setText(QString(""));
@@ -173,9 +180,9 @@ void MainWindow::slots_countDownTextConfig(){
 void MainWindow::slots_countDownPreview(){
     if(this->countDownShowForm->isHidden()){
         this->countDownShowForm->show();
-        this->countDownShowForm->setTop();
+        //this->countDownShowForm->setTop();
         QString str = ui->lineEditCountDownContent->text();
-        setCountDown(str,QString::number(1),QString::number(2),QString::number(3),QString::number(4),QString::number(5),QString::number(6));
+        setCountDown(str,QString::number(1),QString::number(2),QString::number(3),QString::number(4));
     }else{
         this->countDownShowForm->hide();
     }
@@ -223,7 +230,7 @@ void MainWindow::slots_lastTimeSet(){
 void MainWindow::slots_lastPreview(){
     if(lastCloseUpForm->isHidden()){
         lastCloseUpForm->show();
-        lastCloseUpForm->setTop();
+        //lastCloseUpForm->setTop();
         stateyulan = true;
     }else{
         lastCloseUpForm->hide();
@@ -240,7 +247,7 @@ void MainWindow::slots_lastSetMid(){
     int y = (windowSize.height() - formSize.height()) / 2;
 
     this->lastCloseUpForm->setGeometry(QRect(x,y,formSize.width(),formSize.height()));
-    this->lastCloseUpForm->setTop();
+    //this->lastCloseUpForm->setTop();
     ui->spinBoxLastX->setValue(x);
     ui->spinBoxLastY->setValue(y);
 }
@@ -260,16 +267,14 @@ void MainWindow::slots_countDown(){
     if(showCountDownText){
         if(differ>0){
             QString str = ui->lineEditCountDownContent->text();
-            int year = differ / 31536000;
-            int month = differ / 2626560;
-            int day = differ / 86400;
-            int hour = differ / 3600;
-            int minute = differ /60;
+            int day = differ / 86400 % 365;
+            int hour = differ / 3600 % 24;
+            int minute = differ /60 % 60;
             int second = differ % 60;
-            setCountDown(str,QString::number(year),QString::number(month),QString::number(day),QString::number(hour),QString::number(minute),QString::number(second));
+            setCountDown(str,QString::number(day),QString::number(hour),QString::number(minute),QString::number(second));
         }else{
             QString str = ui->lineEditCountDownContent->text();
-            setCountDown(str,QString::number(0),QString::number(0),QString::number(0),QString::number(0),QString::number(0),QString::number(0));
+            setCountDown(str,QString::number(0),QString::number(0),QString::number(0),QString::number(0));
         }
     }
 
@@ -279,7 +284,7 @@ void MainWindow::slots_countDown(){
             lastCloseUpForm->set(differ);
             if(lastCloseUpForm->isHidden()){
                 lastCloseUpForm->show();
-                lastCloseUpForm->setTop();
+                //lastCloseUpForm->setTop();
             }
         }
         if(differ<=0){
@@ -292,7 +297,7 @@ void MainWindow::slots_countDown(){
             if(this->lasetTextShowForm->isHidden()){
                 lastCloseUpForm->hide();
                 this->lasetTextShowForm->show();
-                this->lasetTextShowForm->setTop();
+                //this->lasetTextShowForm->setTop();
             }
         }
     }
@@ -304,7 +309,7 @@ void MainWindow::slots_countDown(){
                 flowerDisplayTime = nowTimeSec;
                 flowerShowed = true;
                 scatterFlowers->show();
-                scatterFlowers->setTop();
+                //scatterFlowers->setTop();
                 scatterFlowers->startScatterFlowers();
 
             }
@@ -320,10 +325,8 @@ void MainWindow::slots_countDown(){
 }
 
 
-void MainWindow::setCountDown(QString str,QString year,QString month,QString day,QString hour,QString minute,QString second){
+void MainWindow::setCountDown(QString str,QString day,QString hour,QString minute,QString second){
     QString newStr = str
-            .replace("$year",year)
-            .replace("$month",month)
             .replace("$day",day)
             .replace("$hour",hour)
             .replace("$minute",minute)
@@ -370,7 +373,7 @@ void MainWindow::slots_setLastTextConfig(){
 void MainWindow::slots_lastTextPreview(){
     if(this->lasetTextShowForm->isHidden()){
         this->lasetTextShowForm->show();
-        this->lasetTextShowForm->setTop();
+        //this->lasetTextShowForm->setTop();
     }else{
         this->lasetTextShowForm->hide();
     }
@@ -411,7 +414,7 @@ void MainWindow::slots_start(){
 
     if(showCountDownText){
         this->countDownShowForm->show();
-        this->countDownShowForm->setTop();
+        //this->countDownShowForm->setTop();
     }else{
         this->countDownShowForm->hide();
     }

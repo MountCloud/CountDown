@@ -24,6 +24,9 @@ void TextShowForm::init(){
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint);
     ui->labelContent->installEventFilter(this);
 
+    this->setStyleSheet("background-color:rgba(0,0,0,0)");
+    this->ui->labelContent->setStyleSheet("background-color:rgba(0,0,0,0)");
+
 
 //    int number = QApplication::desktop()->screenNumber(this);
 //    //如果number是-1会出现崩溃，就是用默认0
