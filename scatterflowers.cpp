@@ -18,6 +18,22 @@ ScatterFlowers::ScatterFlowers(QWidget *parent) : QWidget(parent),
     initUI();
 }
 
+ScatterFlowers::ScatterFlowers(int kDilutionRatio,int kMaxGraphicsCount,int m_animationTime,QWidget *parent) : QWidget(parent),
+    m_scatterFlowersAnimation(nullptr),
+    m_animationGroup(nullptr),
+    m_maxSideLength(20),
+    m_animationTime(m_animationTime),
+    m_graphicsCount(0),
+    m_maxGraphicsCount(0),
+    kDilutionRatio(kDilutionRatio / 2 * kDilutionRatio),
+    kMaxGraphicsCount(kMaxGraphicsCount)
+{
+    setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground, true);
+
+    initUI();
+}
+
 ScatterFlowers::~ScatterFlowers()
 {
     if(m_scatterFlowersAnimation != nullptr)
@@ -166,7 +182,7 @@ QPoint ScatterFlowers::randGraphicsPos(bool isStart)
     if(isStart)
     {
         int x = randNumber(w);
-        int y = randNumber(h) - h;
+        int y = randNumber(h+kDilutionRatio) * -1;
 
         ret.setX(x);
         ret.setY(y);
@@ -248,18 +264,17 @@ void ScatterFlowers::updateGraphicsInfo()
 
 int ScatterFlowers::graphicsCount()
 {
-    const int kDilutionRatio = 20;  //稀释20倍
-    const int kMaxGraphicsCount = 60;   //最大数量60
 
-    int ret = 0;
+//    int ret = 0;
 
-    m_maxGraphicsCount = this->width() * this->height() / (m_maxSideLength * m_maxSideLength * kDilutionRatio);
+//    m_maxGraphicsCount = this->width() * this->height() / (m_maxSideLength * m_maxSideLength * kDilutionRatio);
 
-    ret = m_maxGraphicsCount * 0.618;   //黄金比例
+//    ret = m_maxGraphicsCount * 0.618;   //黄金比例
 
-    ret = (ret > kMaxGraphicsCount) ? kMaxGraphicsCount : ret;
+//    ret = (ret > kMaxGraphicsCount) ? kMaxGraphicsCount : ret;
 
-    return ret;
+    m_maxGraphicsCount = kMaxGraphicsCount;
+    return kMaxGraphicsCount;
 }
 
 bool ScatterFlowers::getFlowerIsStart(){

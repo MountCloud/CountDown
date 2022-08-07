@@ -19,6 +19,7 @@ class ScatterFlowers : public QWidget
 
 public:
     ScatterFlowers(QWidget *parent = nullptr);
+    ScatterFlowers(int kDilutionRatio,int kMaxGraphicsCount,int m_animationTime,QWidget *parent = nullptr);
     ~ScatterFlowers();
 
     void startScatterFlowers();
@@ -65,6 +66,9 @@ private:
     const int m_animationTime;
     int m_graphicsCount;
     int m_maxGraphicsCount;
+
+    int kDilutionRatio = 20/2*20;  //稀释20倍
+    int kMaxGraphicsCount = 60;   //最大数量60
 };
 
 #endif // SCATTERFLOWERS_H

@@ -8,6 +8,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QMessageBox>
+#include <QTimer>
 
 #define qcn
 
@@ -30,14 +31,13 @@ void MainWindow::closeEvent(QCloseEvent* event){
 
 
 void MainWindow::init(){
-    this->setWindowTitle("CountDown v1.0 by MountCloud");
+    this->setWindowTitle("CountDown v1.1 by MountCloud");
     setWindowFlags(Qt::MSWindowsFixedSizeDialogHint | Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     setFixedSize(this->width(),this->height());
     //init form
     countDownShowForm = new TextShowForm();
     lastCloseUpForm = new LastCloseUpForm();
     lasetTextShowForm = new TextShowForm();
-    scatterFlowers = new ScatterFlowers();
 
     countDownShowForm->show();
     countDownShowForm->setTop();
@@ -51,26 +51,11 @@ void MainWindow::init(){
     lasetTextShowForm->setTop();
     lasetTextShowForm->hide();
 
-    scatterFlowers->show();
-    scatterFlowers->setTop();
-    scatterFlowers->hide();
-
     statusLable = new QLabel();
     statusLable->setText(QString(""));
     this->statusBar()->addWidget(statusLable);
 
-    int number = QApplication::desktop()->screenNumber(this);
-    //如果number是-1会出现崩溃，就是用默认0
-    if(number<0){
-        number=0;
-    }
-    //根据number获得当前窗口所在屏幕的大小
-    QSize size = QGuiApplication::screens().at(number)->geometry().size();
-
-    scatterFlowers->resize(size.width(), size.height());
-    scatterFlowers->move(0, 0);
-    scatterFlowers->show();
-    scatterFlowers->hide();
+    reloadFlowerView();
 
     //init event
     connect(ui->actionHomPage, &QAction::triggered, this, &MainWindow::slots_menuHomePage);
@@ -99,6 +84,9 @@ void MainWindow::init(){
 
     connect(ui->pushButtonLastTextContentLeft, &QPushButton::clicked, this, &MainWindow::slots_lastTextTextLeft);
     connect(ui->pushButtonLastTextContentMid, &QPushButton::clicked, this, &MainWindow::slots_lastTextTextMid);
+
+    connect(ui->pushButtonFlowerSet, &QPushButton::clicked, this, &MainWindow::slots_flowerSet);
+    connect(ui->pushButtonFlowerSetAndShow, &QPushButton::clicked, this, &MainWindow::slots_flowerSetAndSHow);
 
     connect(ui->pushButtonStart, &QPushButton::clicked, this, &MainWindow::slots_start);
     connect(ui->pushButtonStop, &QPushButton::clicked, this, &MainWindow::slots_stop);
@@ -303,7 +291,7 @@ void MainWindow::slots_countDown(){
     }
 
     //flower
-    if(showFlowers){
+    if(showFlowers&&scatterFlowers!=NULL){
         if(differ <= flowerEndTimeSec){
             if(!scatterFlowers->getFlowerIsStart()&&!flowerShowed){
                 flowerDisplayTime = nowTimeSec;
@@ -311,7 +299,6 @@ void MainWindow::slots_countDown(){
                 scatterFlowers->show();
                 //scatterFlowers->setTop();
                 scatterFlowers->startScatterFlowers();
-
             }
             if(scatterFlowers->getFlowerIsStart()){
                 int flowerDiiffer = nowTimeSec - flowerDisplayTime;
@@ -333,6 +320,53 @@ void MainWindow::setCountDown(QString str,QString day,QString hour,QString minut
             .replace("$second",second);
     qDebug(newStr.toStdString().c_str());
     this->countDownShowForm->setText(newStr);
+}
+
+void MainWindow::reloadFlowerView(){
+    if(scatterFlowers!=NULL){
+        delete scatterFlowers;
+        scatterFlowers = NULL;
+    }
+
+    flowerEndTimeSec = ui->spinBoxFlowersEndTime->value();
+    flowerShowTimeSec = ui->spinBoxFlowersTime->value();
+
+    int kDilutionRatio = ui->spinBoxFlowerRatio->value();
+    int kMaxGraphicsCount = ui->spinBoxFlowerCount->value();   //最大数量60
+    scatterFlowers = new ScatterFlowers(kDilutionRatio,kMaxGraphicsCount,flowerShowTimeSec*1000);
+
+
+    scatterFlowers->show();
+    scatterFlowers->setTop();
+    scatterFlowers->hide();
+
+    int number = QApplication::desktop()->screenNumber(this);
+    //如果number是-1会出现崩溃，就是用默认0
+    if(number<0){
+        number=0;
+    }
+    //根据number获得当前窗口所在屏幕的大小
+    QSize size = QGuiApplication::screens().at(number)->geometry().size();
+
+    scatterFlowers->resize(size.width(), size.height());
+    scatterFlowers->move(0, 0);
+    scatterFlowers->show();
+    scatterFlowers->hide();
+
+}
+
+void MainWindow::playFlower(){
+    if(scatterFlowers!=NULL){
+        //ui->pushButtonFlowerSetAndShow->setDisabled(false);
+        ui->pushButtonFlowerSetAndShow->setEnabled(false);
+        scatterFlowers->show();
+        scatterFlowers->startScatterFlowers();
+        QTimer::singleShot(flowerShowTimeSec*1000,this, [=]{
+            this->scatterFlowers->stopScatterFlowers();
+            this->scatterFlowers->hide();
+            this->ui->pushButtonFlowerSetAndShow->setEnabled(true);
+        });
+    }
 }
 
 void MainWindow::slots_lastTextSelectColor(){
@@ -398,6 +432,17 @@ void MainWindow::slots_lastTextTextLeft(){
 
 void MainWindow::slots_lastTextTextMid(){
     lasetTextShowForm->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+}
+
+
+
+void MainWindow::slots_flowerSet(){
+    reloadFlowerView();
+}
+
+void MainWindow::slots_flowerSetAndSHow(){
+    reloadFlowerView();
+    playFlower();
 }
 
 //--------------------------------

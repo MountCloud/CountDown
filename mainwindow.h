@@ -25,12 +25,12 @@ public:
     void closeEvent(QCloseEvent* event) override;
 private:
     Ui::MainWindow *ui;
-    TextShowForm* countDownShowForm;
-    LastCloseUpForm* lastCloseUpForm;
-    TextShowForm* lasetTextShowForm;
-    QTimer* countDownTimer;
+    TextShowForm* countDownShowForm = NULL;
+    LastCloseUpForm* lastCloseUpForm = NULL;
+    TextShowForm* lasetTextShowForm = NULL;
+    QTimer* countDownTimer = NULL;
     QLabel* statusLable;
-    ScatterFlowers* scatterFlowers;
+    ScatterFlowers* scatterFlowers = NULL;
     bool stateyulan = false;
     bool statestart = false;
     int lastnum = 60;
@@ -56,6 +56,9 @@ private:
     void init();
     void setCountDown(QString str,QString day,QString hour,QString minute,QString second);
 
+    void reloadFlowerView();
+    void playFlower();
+
 private slots:
     void slots_menuHomePage();
     void slots_about();
@@ -80,6 +83,9 @@ private slots:
     void slots_lastTextSetMid();
     void slots_lastTextTextLeft();
     void slots_lastTextTextMid();
+
+    void slots_flowerSet();
+    void slots_flowerSetAndSHow();
 
     void slots_start();
     void slots_stop();
