@@ -1047,12 +1047,12 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>244</width>
+       <x>11</x>
+       <y>51</y>
+       <width>304</width>
        <height>23</height>
       </rect>
      </property>
@@ -1060,12 +1060,15 @@
       <item>
        <widget class="QLabel" name="label_28">
         <property name="text">
-         <string>稀释值：</string>
+         <string>撒花次数（-1无限）：</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBoxFlowerRatio">
+       <widget class="QSpinBox" name="spinBoxFlowerPlayCount">
+        <property name="minimum">
+         <number>-1</number>
+        </property>
         <property name="maximum">
          <number>999999</number>
         </property>
@@ -1073,7 +1076,7 @@
          <number>0</number>
         </property>
         <property name="value">
-         <number>20</number>
+         <number>-1</number>
         </property>
        </widget>
       </item>

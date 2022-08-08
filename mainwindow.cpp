@@ -328,18 +328,6 @@ void MainWindow::reloadFlowerView(){
         scatterFlowers = NULL;
     }
 
-    flowerEndTimeSec = ui->spinBoxFlowersEndTime->value();
-    flowerShowTimeSec = ui->spinBoxFlowersTime->value();
-
-    int kDilutionRatio = ui->spinBoxFlowerRatio->value();
-    int kMaxGraphicsCount = ui->spinBoxFlowerCount->value();   //最大数量60
-    scatterFlowers = new ScatterFlowers(kDilutionRatio,kMaxGraphicsCount,flowerShowTimeSec*1000);
-
-
-    scatterFlowers->show();
-    scatterFlowers->setTop();
-    scatterFlowers->hide();
-
     int number = QApplication::desktop()->screenNumber(this);
     //如果number是-1会出现崩溃，就是用默认0
     if(number<0){
@@ -347,6 +335,17 @@ void MainWindow::reloadFlowerView(){
     }
     //根据number获得当前窗口所在屏幕的大小
     QSize size = QGuiApplication::screens().at(number)->geometry().size();
+
+    flowerEndTimeSec = ui->spinBoxFlowersEndTime->value();
+    flowerShowTimeSec = ui->spinBoxFlowersTime->value();
+
+    int playCount = ui->spinBoxFlowerPlayCount->value();
+    int kMaxGraphicsCount = ui->spinBoxFlowerCount->value();   //最大数量60
+    scatterFlowers = new ScatterFlowers(kMaxGraphicsCount,playCount,size.width(),size.height());
+
+    scatterFlowers->show();
+    scatterFlowers->setTop();
+    scatterFlowers->hide();
 
     scatterFlowers->resize(size.width(), size.height());
     scatterFlowers->move(0, 0);

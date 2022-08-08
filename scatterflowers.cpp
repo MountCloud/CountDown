@@ -2,10 +2,12 @@
 #include <QTime>
 #include <QResizeEvent>
 #include <QDebug>
+#include <QPauseAnimation>
+
 #include <Windows.h>
 
 ScatterFlowers::ScatterFlowers(QWidget *parent) : QWidget(parent),
-    m_scatterFlowersAnimation(nullptr),
+    //m_scatterFlowersAnimation(nullptr),
     m_animationGroup(nullptr),
     m_maxSideLength(20),
     m_animationTime(3000),
@@ -18,15 +20,17 @@ ScatterFlowers::ScatterFlowers(QWidget *parent) : QWidget(parent),
     initUI();
 }
 
-ScatterFlowers::ScatterFlowers(int kDilutionRatio,int kMaxGraphicsCount,int m_animationTime,QWidget *parent) : QWidget(parent),
-    m_scatterFlowersAnimation(nullptr),
+ScatterFlowers::ScatterFlowers(int kMaxGraphicsCount,int playCount,int width,int height,QWidget *parent) : QWidget(parent),
+    //m_scatterFlowersAnimation(nullptr),
     m_animationGroup(nullptr),
     m_maxSideLength(20),
-    m_animationTime(m_animationTime),
+    m_animationTime(3000),
     m_graphicsCount(0),
     m_maxGraphicsCount(0),
-    kDilutionRatio(kDilutionRatio / 2 * kDilutionRatio),
-    kMaxGraphicsCount(kMaxGraphicsCount)
+    kMaxGraphicsCount(kMaxGraphicsCount),
+    w(width),
+    h(height),
+    playCount(playCount)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -36,76 +40,97 @@ ScatterFlowers::ScatterFlowers(int kDilutionRatio,int kMaxGraphicsCount,int m_an
 
 ScatterFlowers::~ScatterFlowers()
 {
-    if(m_scatterFlowersAnimation != nullptr)
-    {
-        m_scatterFlowersAnimation->stop();
+//    for (int i = 0; i < m_graphicsInfoMap.size(); i++)
+//    {
+//        GraphicsInfo info = m_graphicsInfoMap.value(i);
+//        info.animation->stop();
+//    }
+    if(m_animationGroup != nullptr){
+        m_animationGroup->stop();
     }
+//    if(m_scatterFlowersAnimation != nullptr)
+//    {
+//        m_scatterFlowersAnimation->stop();
+//    }
 }
 
 void ScatterFlowers::startScatterFlowers()
 {
+    if(flowerIsStart){
+        return;
+    }
     flowerIsStart = true;
-    bool ret = true;
-    updateGraphicsInfo();
+//    bool ret = true;
+//    updateGraphicsInfo();
 
-    for (int i = 0; i < m_graphicsInfoMap.size(); i++)
-    {
-        GraphicsInfo info = m_graphicsInfoMap.value(i);
+//    for (int i = 0; i < m_graphicsInfoMap.size(); i++)
+//    {
+//        GraphicsInfo info = m_graphicsInfoMap.value(i);
 
-        if(info.scatterFlowersGraphics != nullptr)
-        {
-            info.scatterFlowersGraphics->setGraphicsHidden(true);
-        }
+//        if(info.scatterFlowersGraphics != nullptr)
+//        {
+//            info.scatterFlowersGraphics->setGraphicsHidden(true);
+//        }
 
-        if(info.animation != nullptr && m_animationGroup != nullptr && info.isShow)
-        {
-            m_animationGroup->removeAnimation(info.animation);
-            info.isShow = false;
+//        if(info.animation != nullptr && m_animationGroup != nullptr && info.isShow)
+//        {
+//            m_animationGroup->removeAnimation(info.animation);
+//            info.isShow = false;
 
-            m_graphicsInfoMap[i] = info;
-        }
-    }
+//            m_graphicsInfoMap[i] = info;
+//        }
+//    }
 
-    for(int i = 0; i < m_graphicsCount; i++)
-    {
-        int index = randNumber(m_maxGraphicsCount);
+//    for(int i = 0; i < m_graphicsCount; i++)
+//    {
+//        int index = randNumber(m_maxGraphicsCount);
 
-        GraphicsInfo info = m_graphicsInfoMap.value(index);
-        if(info.scatterFlowersGraphics != nullptr && info.animation != nullptr && m_animationGroup != nullptr)
-        {
-            info.startPoint = randGraphicsPos(true);
-            info.endPoint = randGraphicsPos(false);
+//        GraphicsInfo info = m_graphicsInfoMap.value(index);
+//        if(info.scatterFlowersGraphics != nullptr && info.animation != nullptr && m_animationGroup != nullptr)
+//        {
+//            info.startPoint = randGraphicsPos(true);
+//            info.endPoint = randGraphicsPos(false);
 
-            info.scatterFlowersGraphics->setGraphicsHidden(false);
-            info.isShow = true;
+//            info.scatterFlowersGraphics->setGraphicsHidden(false);
+//            info.isShow = true;
 
-            info.animation->setKeyValueAt(0, QRect(info.startPoint.x(), info.startPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
-            info.animation->setKeyValueAt(1, QRect(info.endPoint.x(), info.endPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
+//            info.animation->setKeyValueAt(0, QRect(info.startPoint.x(), info.startPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
+//            info.animation->setKeyValueAt(1, QRect(info.endPoint.x(), info.endPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
 
-            m_animationGroup->addAnimation(info.animation);
+//            m_animationGroup->addAnimation(info.animation);
 
-            m_graphicsInfoMap[index] = info;
-        }
-        else
-        {
-            ret = false;
-        }
-    }
+//            m_graphicsInfoMap[index] = info;
+//        }
+//        else
+//        {
+//            ret = false;
+//        }
+//    }
 
-    if(ret && m_animationGroup != nullptr)
-    {
-        m_animationGroup->start();
-    }
-    else
-    {
-        qDebug() << __FUNCTION__ << "Scatter Flowers is fail";
-    }
+    m_animationGroup->start();
+
+//    if(m_animationGroup != nullptr)
+//    {
+//        m_animationGroup->start();
+//    }
+//    else
+//    {
+//        qDebug() << __FUNCTION__ << "Scatter Flowers is fail";
+//    }
 }
 
 void ScatterFlowers::stopScatterFlowers()
 {
     flowerIsStart = false;
-    m_scatterFlowersAnimation->stop();
+    if(m_animationGroup != nullptr){
+        m_animationGroup->stop();
+    }
+    //m_scatterFlowersAnimation->stop();
+//    for (int i = 0; i < m_graphicsInfoMap.size(); i++)
+//    {
+//        GraphicsInfo info = m_graphicsInfoMap.value(i);
+//        info.animation->stop();
+//    }
 }
 
 void ScatterFlowers::resizeEvent(QResizeEvent *event)
@@ -115,15 +140,17 @@ void ScatterFlowers::resizeEvent(QResizeEvent *event)
 
 void ScatterFlowers::initUI()
 {
-    resize(400, 400);
+    resize(w, h);
 
     m_graphicsCount = graphicsCount();
 
-    m_scatterFlowersAnimation = new QPropertyAnimation(this, "geometry", this);
-    m_scatterFlowersAnimation->setDuration(m_animationTime);
-    m_scatterFlowersAnimation->setEasingCurve(QEasingCurve::OutQuad);
+//    m_scatterFlowersAnimation = new QPropertyAnimation(this, "geometry", this);
+//    m_scatterFlowersAnimation->setDuration(m_animationTime);
+//    m_scatterFlowersAnimation->setEasingCurve(QEasingCurve::OutQuad);
 
     m_animationGroup = new QParallelAnimationGroup(this);
+
+    updateGraphicsInfo();
 }
 
 int ScatterFlowers::randNumber(int range)
@@ -182,7 +209,8 @@ QPoint ScatterFlowers::randGraphicsPos(bool isStart)
     if(isStart)
     {
         int x = randNumber(w);
-        int y = randNumber(h+kDilutionRatio) * -1;
+        //int y = randNumber(h+kDilutionRatio) * -1;
+        int y = randNumber(h) * -1;
 
         ret.setX(x);
         ret.setY(y);
@@ -206,60 +234,103 @@ void ScatterFlowers::updateGraphicsInfo()
 {
     m_graphicsCount = graphicsCount();
 
-    int size = m_graphicsInfoMap.size();
-    int diff = m_maxGraphicsCount - size;
-
-    if(diff > 0)
+    for(int i = 0; (i < m_graphicsCount); ++i)
     {
-        for(int i = 0; (i < diff) && (m_animationGroup != nullptr); ++i)
-        {
-            GraphicsInfo info;
+        GraphicsInfo info;
 
-            info.startPoint = randGraphicsPos(true);
-            info.endPoint = randGraphicsPos(false);
+        info.startPoint = randGraphicsPos(true);
+        info.endPoint = randGraphicsPos(false);
 
-            QColor color(randNumber(255),randNumber(255),randNumber(255));
+        QColor color(randNumber(255),randNumber(255),randNumber(255));
 
-            info.drawGraphicsinfo.type = randGraphics();
-            info.drawGraphicsinfo.angle = randAngle();
-            info.drawGraphicsinfo.color = randColor();
-            info.drawGraphicsinfo.sideLength = randSideLength();
+        info.drawGraphicsinfo.type = randGraphics();
+        info.drawGraphicsinfo.angle = randAngle();
+        info.drawGraphicsinfo.color = randColor();
+        info.drawGraphicsinfo.sideLength = randSideLength();
 
-            ScatterFlowersGraphics* scatterFlowersGraphics = ScatterFlowersGraphics::getGraphics(info.drawGraphicsinfo, this);
-            scatterFlowersGraphics->setGraphicsHidden(true);
-            scatterFlowersGraphics->setMaxSideLength(m_maxSideLength);
-            scatterFlowersGraphics->move(info.startPoint);
+        ScatterFlowersGraphics* scatterFlowersGraphics = ScatterFlowersGraphics::getGraphics(info.drawGraphicsinfo, this);
+        //scatterFlowersGraphics->setGraphicsHidden(true);
+        scatterFlowersGraphics->setMaxSideLength(m_maxSideLength);
+        scatterFlowersGraphics->move(info.startPoint);
 
-            info.scatterFlowersGraphics = scatterFlowersGraphics;
+        info.scatterFlowersGraphics = scatterFlowersGraphics;
 
-            QPropertyAnimation* animation = new QPropertyAnimation(scatterFlowersGraphics, "geometry", this);
-            animation->setDuration(m_animationTime);
-            info.animation = animation;
+        QPropertyAnimation* animation = new QPropertyAnimation(scatterFlowersGraphics, "geometry", this);
+        animation->setDuration(m_animationTime);
 
-            m_graphicsInfoMap[size + i] = info;
-        }
+        animation->setKeyValueAt(0, QRect(info.startPoint.x(), info.startPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
+        animation->setKeyValueAt(1, QRect(info.endPoint.x(), info.endPoint.y(), info.scatterFlowersGraphics->width(), info.scatterFlowersGraphics->height()));
+
+        info.animation = animation;
+
+        //QPauseAnimation pauseAnimation = new QPauseAnimation(100,this);
+
+        QSequentialAnimationGroup* seqAnimation = new QSequentialAnimationGroup(this);
+
+        int n = qrand() % m_animationTime;
+
+        seqAnimation->addPause(n);
+        seqAnimation->addAnimation(animation);
+
+        seqAnimation->setLoopCount(playCount);
+        m_animationGroup->addAnimation(seqAnimation);
     }
-    else
-    {
-        diff = -diff;
 
-        while (diff)
-        {
-            GraphicsInfo info = m_graphicsInfoMap.value(size - 1 - diff);
+//    int size = m_graphicsInfoMap.size();
+//    int diff = m_maxGraphicsCount - size;
 
-            if(info.scatterFlowersGraphics != nullptr)
-            {
-                info.scatterFlowersGraphics->setGraphicsHidden(true);
-            }
-            else
-            {
-                qDebug() << __FUNCTION__ << "Update graphics info is fail";
-                break;
-            }
+//    if(diff > 0)
+//    {
+//        for(int i = 0; (i < diff) && (m_animationGroup != nullptr); ++i)
+//        {
+//            GraphicsInfo info;
 
-            diff--;
-        }
-    }
+//            info.startPoint = randGraphicsPos(true);
+//            info.endPoint = randGraphicsPos(false);
+
+//            QColor color(randNumber(255),randNumber(255),randNumber(255));
+
+//            info.drawGraphicsinfo.type = randGraphics();
+//            info.drawGraphicsinfo.angle = randAngle();
+//            info.drawGraphicsinfo.color = randColor();
+//            info.drawGraphicsinfo.sideLength = randSideLength();
+
+//            ScatterFlowersGraphics* scatterFlowersGraphics = ScatterFlowersGraphics::getGraphics(info.drawGraphicsinfo, this);
+//            scatterFlowersGraphics->setGraphicsHidden(true);
+//            scatterFlowersGraphics->setMaxSideLength(m_maxSideLength);
+//            scatterFlowersGraphics->move(info.startPoint);
+
+//            info.scatterFlowersGraphics = scatterFlowersGraphics;
+
+//            QPropertyAnimation* animation = new QPropertyAnimation(scatterFlowersGraphics, "geometry", this);
+//            animation->setDuration(m_animationTime);
+//            animation->setLoopCount(-1);
+//            info.animation = animation;
+
+//            m_graphicsInfoMap[size + i] = info;
+//        }
+//    }
+//    else
+//    {
+//        diff = -diff;
+
+//        while (diff)
+//        {
+//            GraphicsInfo info = m_graphicsInfoMap.value(size - 1 - diff);
+
+//            if(info.scatterFlowersGraphics != nullptr)
+//            {
+//                info.scatterFlowersGraphics->setGraphicsHidden(true);
+//            }
+//            else
+//            {
+//                qDebug() << __FUNCTION__ << "Update graphics info is fail";
+//                break;
+//            }
+
+//            diff--;
+//        }
+//    }
 }
 
 int ScatterFlowers::graphicsCount()

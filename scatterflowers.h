@@ -4,8 +4,8 @@
 #include <QWidget>
 #include <QPropertyAnimation>
 #include <QMap>
-#include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QSequentialAnimationGroup>
 #include "scatterflowersgraphics.h"
 
 namespace Ui {
@@ -19,7 +19,7 @@ class ScatterFlowers : public QWidget
 
 public:
     ScatterFlowers(QWidget *parent = nullptr);
-    ScatterFlowers(int kDilutionRatio,int kMaxGraphicsCount,int m_animationTime,QWidget *parent = nullptr);
+    ScatterFlowers(int kMaxGraphicsCount,int playCount,int width,int height,QWidget *parent = nullptr);
     ~ScatterFlowers();
 
     void startScatterFlowers();
@@ -38,7 +38,7 @@ private:
         bool isShow;
         ScatterFlowersGraphics::DrawGraphicsInfo drawGraphicsinfo;
         ScatterFlowersGraphics* scatterFlowersGraphics;
-        QPropertyAnimation* animation;
+        QAbstractAnimation* animation;
 
         GraphicsInfo() : startPoint(0,0), endPoint(0,0), isShow(false), scatterFlowersGraphics(nullptr) {}
     };
@@ -56,18 +56,19 @@ private:
     int graphicsCount();
 
     bool flowerIsStart = false;
+    int w = 400;
+    int h = 400;
+    int playCount = -1;
 
 private:
-    QPropertyAnimation* m_scatterFlowersAnimation;
-    QMap<int, GraphicsInfo> m_graphicsInfoMap;
+    //QPropertyAnimation* m_scatterFlowersAnimation;
+    //QMap<int, GraphicsInfo> m_graphicsInfoMap;
     QParallelAnimationGroup* m_animationGroup;
 
     const int m_maxSideLength;
     const int m_animationTime;
     int m_graphicsCount;
     int m_maxGraphicsCount;
-
-    int kDilutionRatio = 20/2*20;  //稀释20倍
     int kMaxGraphicsCount = 60;   //最大数量60
 };
 
