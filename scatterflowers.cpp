@@ -210,7 +210,7 @@ QPoint ScatterFlowers::randGraphicsPos(bool isStart)
     {
         int x = randNumber(w);
         //int y = randNumber(h+kDilutionRatio) * -1;
-        int y = randNumber(h) * -1;
+        int y = m_maxSideLength * -1;
 
         ret.setX(x);
         ret.setY(y);

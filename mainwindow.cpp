@@ -31,7 +31,7 @@ void MainWindow::closeEvent(QCloseEvent* event){
 
 
 void MainWindow::init(){
-    this->setWindowTitle("CountDown v1.1 by MountCloud");
+    this->setWindowTitle("CountDown v1.2.1 by MountCloud");
     setWindowFlags(Qt::MSWindowsFixedSizeDialogHint | Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     setFixedSize(this->width(),this->height());
     //init form
